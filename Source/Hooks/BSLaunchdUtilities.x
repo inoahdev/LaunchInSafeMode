@@ -24,7 +24,7 @@
     [launchInSafeModeTweak setCurrentApplicationBundleIdentifier:nil];
 
     if (![environment isKindOfClass:%c(NSMutableDictionary)]) {
-        NSMutableDictionary *mutableEnvironment = [[NSMutableDictionary alloc] initWithDictionary:environment];
+        NSMutableDictionary *mutableEnvironment = [NSMutableDictionary dictionaryWithDictionary:environment];
         environment = mutableEnvironment;
     }
 
