@@ -23,15 +23,22 @@
 
     [launchInSafeModeTweak setCurrentApplicationBundleIdentifier:nil];
 
+    BOOL environmentShouldBeReleased = NO;
     if (![environment isKindOfClass:%c(NSMutableDictionary)]) {
-        NSMutableDictionary *mutableEnvironment = [NSMutableDictionary dictionaryWithDictionary:environment];
-        environment = mutableEnvironment;
+        environment = [environment mutableCopy];
+        environmentShouldBeReleased = YES;
     }
 
     NSNumber *safeModeNumber = [[NSNumber alloc] initWithBool:YES];
     [environment setObject:safeModeNumber forKey:@"_MSSafeMode"];
 
     [safeModeNumber release];
-    return %orig();
+
+    BOOL result = %orig();
+    if (environmentShouldBeReleased) {
+        [environment release];
+    }
+
+    return result;
 }
 %end
