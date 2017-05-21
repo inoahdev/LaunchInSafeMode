@@ -1,6 +1,6 @@
 Package: com.inoahdev.launchinsafemode
 Name: LaunchInSafeMode
-Depends: mobilesubstrate, preferenceloader
+Depends: mobilesubstrate, preferenceloader, org.thebigboss.unlimshortcut
 Version: 1.0
 Architecture: iphoneos-arm
 Description: Use Force Touch to launch any application in safe mode!
