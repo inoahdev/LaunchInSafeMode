@@ -10,7 +10,9 @@
 
 %hook BSLaunchdUtilities
 + (BOOL)createJobWithLabel:(NSString *)jobLabel bundleIdentifier:(NSString *)bundleIdentifier path:(NSString *)path containerPath:(NSString *)containerPath arguments:(NSArray<NSString *> *)arguments environment:(NSMutableDictionary *)environment standardOutputPath:(NSString *)standardOutputPath standardErrorPath:(NSString *)standardErrorPath machServices:(NSArray<NSString *> *)machServices threadPriority:(NSInteger)threadPriority waitForDebugger:(BOOL)waitForDebugger denyCreatingOtherJobs:(BOOL)denyCreatingOtherJobs runAtLoad:(BOOL)runAtLoad disableASLR:(BOOL)disableASLR systemApp:(BOOL)systemApp {
-    NSString *currentApplicationBundleIdentifier = [[LaunchInSafeModeTweak sharedInstance] currentApplicationBundleIdentifier];
+    LaunchInSafeModeTweak *launchInSafeModeTweak = [LaunchInSafeModeTweak sharedInstance];
+    NSString *currentApplicationBundleIdentifier = [launchInSafeModeTweak currentApplicationBundleIdentifier];
+
     if (!currentApplicationBundleIdentifier) {
         return %orig();
     }
@@ -19,7 +21,7 @@
         return %orig();
     }
 
-    currentApplicationBundleIdentifier = nil;
+    [launchInSafeModeTweak setCurrentApplicationBundleIdentifier:nil];
 
     if (![environment isKindOfClass:%c(NSMutableDictionary)]) {
         NSMutableDictionary *mutableEnvironment = [[NSMutableDictionary alloc] initWithDictionary:environment];
