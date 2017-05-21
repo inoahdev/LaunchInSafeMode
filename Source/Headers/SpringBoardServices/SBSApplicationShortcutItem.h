@@ -1,5 +1,5 @@
 //
-//  SBSApplicationShortcutItem.h
+//  Source/Headers/SBSApplicationShortcutItem.h
 //  LaunchInSafeMode
 //
 //  Created by inoahdev on 5/20/17.

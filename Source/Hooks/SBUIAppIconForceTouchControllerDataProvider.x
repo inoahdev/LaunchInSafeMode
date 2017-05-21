@@ -1,5 +1,5 @@
 //
-//  Tweak.x
+//  Source/Hooks/SBApplicationShortcutStoreManager.x
 //  LaunchInSafeMode
 //
 //  Created by inoahdev on 5/20/17.
@@ -7,14 +7,23 @@
 //
 
 #import "../Classes/LaunchInSafeModeTweak.h"
+
 #import "../Headers/SpringBoardServices/SBSApplicationShortcutItem.h"
+#import "../Headers/SpringBoardUI/SBUIAppIconForceTouchControllerDataProvider.h"
 
 static NSString *const kLaunchInSafeModeTweakLaunchInSafeMode = @"kLaunchInSafeModeTweakLaunchInSafeMode";
 
-%hook SBApplicationShortcutStoreManager
-- (NSArray<SBSApplicationShortcutItem *> *)applicationShortcutItemsForBundleIdentifier:(NSString *)bundleIdentifier withVersion:(NSUInteger)version {
+%hook SBUIAppIconForceTouchControllerDataProvider
+- (NSArray *)applicationShortcutItems {
     LaunchInSafeModeTweak *launchInSafeModeTweak = [LaunchInSafeModeTweak sharedInstance];
+    BOOL launchInSafeModeTweakIsEnabled = [launchInSafeModeTweak isEnabled];
+
+    if (!launchInSafeModeTweakIsEnabled) {
+        return %orig();
+    }
+
     NSMutableDictionary *launchInSafeModeTweakCachedShortcutItems = [launchInSafeModeTweak cachedShortcutItems];
+    NSString *bundleIdentifier = [self applicationBundleIdentifier];
 
     NSArray<SBSApplicationShortcutItem *> *applicationShortcutItems = [launchInSafeModeTweakCachedShortcutItems objectForKey:bundleIdentifier];
     if (applicationShortcutItems) {

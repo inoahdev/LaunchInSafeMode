@@ -1,5 +1,5 @@
 //
-//  Tweak.x
+//  Source/Hooks/SBUIAppIconForceTouchController.x
 //  LaunchInSafeMode
 //
 //  Created by inoahdev on 5/20/17.

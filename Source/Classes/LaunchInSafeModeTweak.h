@@ -1,5 +1,5 @@
 //
-//  LaunchInSafeModeTweak.h
+//  Source/Classes/LaunchInSafeModeTweak.h
 //  LaunchInSafeMode
 //
 //  Created by inoahdev on 5/20/17.
@@ -8,6 +8,7 @@
 
 #import <Foundation/Foundation.h>
 #import "../Headers/SpringBoardServices/SBSApplicationShortcutItem.h"
+
 @interface LaunchInSafeModeTweak : NSObject
 + (instancetype)sharedInstance;
 - (BOOL)isEnabled;

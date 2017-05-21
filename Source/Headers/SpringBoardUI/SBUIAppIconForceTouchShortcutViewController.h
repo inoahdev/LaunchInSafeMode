@@ -1,5 +1,5 @@
 //
-//  SBUIAppIconForceTouchShortcutViewController.h
+//  Source/Headers/SBUIAppIconForceTouchShortcutViewController.h
 //  LaunchInSafeMode
 //
 //  Created by inoahdev on 5/20/17.

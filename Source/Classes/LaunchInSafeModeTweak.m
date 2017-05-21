@@ -1,5 +1,5 @@
 //
-//  LaunchInSafeModeTweak.m
+//  Source/Classes/LaunchInSafeModeTweak.m
 //  LaunchInSafeMode
 //
 //  Created by inoahdev on 5/20/17.
@@ -39,7 +39,7 @@ static void LoadPreferences() {
         CFNotificationCenterAddObserver(CFNotificationCenterGetDarwinNotifyCenter(),
                                         NULL,
                                         (CFNotificationCallback)LoadPreferences,
-                                        (__bridge CFStringRef)@"iNoahDevSearchDeletePreferencesChangedNotification",
+                                        (__bridge CFStringRef)@"iNoahDevLaunchInSafeModePreferencesChangedNotification",
                                         NULL,
                                         CFNotificationSuspensionBehaviorDeliverImmediately);
         LoadPreferences();
