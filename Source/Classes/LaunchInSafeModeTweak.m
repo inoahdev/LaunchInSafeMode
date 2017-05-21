@@ -60,4 +60,9 @@ static void LoadPreferences() {
 - (BOOL)isEnabled {
     return [[preferences objectForKey:@"kEnabled"] boolValue];
 }
+
+- (void)dealloc {
+    [_cachedShortcutItems release];
+    [super dealloc];
+}
 @end

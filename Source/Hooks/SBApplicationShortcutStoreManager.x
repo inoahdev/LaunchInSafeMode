@@ -38,4 +38,20 @@ static NSString *const kLaunchInSafeModeTweakLaunchInSafeMode = @"kLaunchInSafeM
 
     return newApplicationShortcutItems;
 }
+
+- (void)_installedAppsDidChange:(NSNotification *)installedAppsChangedNotification {
+    NSDictionary *installedAppsChangedNotificationUserInfo = [installedAppsChangedNotification userInfo];
+    NSSet *removedApplicationBundleIdentifiers = [installedAppsChangedNotificationUserInfo objectForKey:@"SBInstalledApplicationsRemovedBundleIDs"];
+
+    if (removedApplicationBundleIdentifiers) {
+        LaunchInSafeModeTweak *launchInSafeModeTweak = [LaunchInSafeModeTweak sharedInstance];
+        NSMutableDictionary *launchInSafeModeTweakCachedShortcutItems = [launchInSafeModeTweak cachedShortcutItems];
+
+        for (NSString *removedApplicationBundleIdentifier in removedApplicationBundleIdentifiers) {
+            [launchInSafeModeTweakCachedShortcutItems removeObjectForKey:removedApplicationBundleIdentifier];
+        }
+    }
+
+    %orig();
+}
 %end
