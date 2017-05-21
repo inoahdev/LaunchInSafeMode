@@ -14,9 +14,9 @@ static NSString *const kLaunchInSafeModeTweakLaunchInSafeMode = @"kLaunchInSafeM
 %hook SBApplicationShortcutStoreManager
 - (NSArray<SBSApplicationShortcutItem *> *)applicationShortcutItemsForBundleIdentifier:(NSString *)bundleIdentifier withVersion:(NSUInteger)version {
     LaunchInSafeModeTweak *launchInSafeModeTweak = [LaunchInSafeModeTweak sharedInstance];
-    NSMutableDictionary<NSString *, NSArray<SBSApplicationShortcutItem *> *> *cachedShortcutItems = [launchInSafeModeTweak cachedShortcutItems];
+    NSMutableDictionary *launchInSafeModeTweakCachedShortcutItems = [launchInSafeModeTweak cachedShortcutItems];
 
-    NSArray<SBSApplicationShortcutItem *> *applicationShortcutItems = [cachedShortcutItems objectForKey:bundleIdentifier];
+    NSArray<SBSApplicationShortcutItem *> *applicationShortcutItems = [launchInSafeModeTweakCachedShortcutItems objectForKey:bundleIdentifier];
     if (applicationShortcutItems) {
         return applicationShortcutItems;
     }
@@ -31,7 +31,7 @@ static NSString *const kLaunchInSafeModeTweakLaunchInSafeMode = @"kLaunchInSafeM
     NSMutableArray *newApplicationShortcutItems = [[NSMutableArray alloc] initWithArray:originalApplicationShortcutItems];
 
     [newApplicationShortcutItems addObject:applicationShortcutItem];
-    [cachedShortcutItems setObject:newApplicationShortcutItems forKey:bundleIdentifier];
+    [launchInSafeModeTweakCachedShortcutItems setObject:newApplicationShortcutItems forKey:bundleIdentifier];
 
     [newApplicationShortcutItems release];
     [applicationShortcutItem release];

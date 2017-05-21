@@ -8,7 +8,6 @@
 
 #import <Foundation/Foundation.h>
 #import "../Headers/SpringBoardServices/SBSApplicationShortcutItem.h"
-
 @interface LaunchInSafeModeTweak : NSObject
 + (instancetype)sharedInstance;
 - (BOOL)isEnabled;

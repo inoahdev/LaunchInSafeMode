@@ -23,7 +23,7 @@ static NSString *const kLaunchInSafeModeTweakLaunchInSafeMode = @"kLaunchInSafeM
     LaunchInSafeModeTweak *launchInSafeModeTweak = [LaunchInSafeModeTweak sharedInstance];
     NSString *currentApplicationBundleIdentifier = [launchInSafeModeTweak currentApplicationBundleIdentifier];
 
-    [launchInSafeModeTweakSharedInstance setCurrentApplicationBundleIdentifier:[applicationShortcutItem bundleIdentifierToLaunch]];
+    [launchInSafeModeTweak setCurrentApplicationBundleIdentifier:[applicationShortcutItem bundleIdentifierToLaunch]];
     [[%c(FBSystemService) sharedInstance] terminateApplication:currentApplicationBundleIdentifier forReason:1 andReport:YES withDescription:nil source:[%c(BSAuditToken) tokenForCurrentProcess] completion:nil];
 
     %orig();
