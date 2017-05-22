@@ -16,10 +16,11 @@ static NSString *const kLaunchInSafeModeTweakLaunchInSafeMode = @"kLaunchInSafeM
 %hook SBUIAppIconForceTouchControllerDataProvider
 - (NSArray *)applicationShortcutItems {
     LaunchInSafeModeTweak *launchInSafeModeTweak = [LaunchInSafeModeTweak sharedInstance];
-    BOOL launchInSafeModeTweakIsEnabled = [launchInSafeModeTweak isEnabled];
+    NSArray *originalApplicationShortcutItems = %orig();
 
+    BOOL launchInSafeModeTweakIsEnabled = [launchInSafeModeTweak isEnabled];
     if (!launchInSafeModeTweakIsEnabled) {
-        return %orig();
+        return originalApplicationShortcutItems;
     }
 
     NSMutableDictionary *launchInSafeModeTweakCachedShortcutItems = [launchInSafeModeTweak cachedShortcutItems];
@@ -36,8 +37,7 @@ static NSString *const kLaunchInSafeModeTweakLaunchInSafeMode = @"kLaunchInSafeM
     [applicationShortcutItem setBundleIdentifierToLaunch:bundleIdentifier];
     [applicationShortcutItem setType:kLaunchInSafeModeTweakLaunchInSafeMode];
 
-    NSArray *originalApplicationShortcutItems = %orig();
-    NSMutableArray *newApplicationShortcutItems = [[NSMutableArray alloc] initWithArray:originalApplicationShortcutItems];
+    NSMutableArray *newApplicationShortcutItems = [originalApplicationShortcutItems mutableCopy];
 
     [newApplicationShortcutItems addObject:applicationShortcutItem];
     [launchInSafeModeTweakCachedShortcutItems setObject:newApplicationShortcutItems forKey:bundleIdentifier];

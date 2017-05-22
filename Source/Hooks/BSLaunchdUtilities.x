@@ -29,10 +29,7 @@
         environmentShouldBeReleased = YES;
     }
 
-    NSNumber *safeModeNumber = [[NSNumber alloc] initWithBool:YES];
-    [environment setObject:safeModeNumber forKey:@"_MSSafeMode"];
-
-    [safeModeNumber release];
+    [environment setObject:[launchInSafeModeTweak safeModeNumber] forKey:@"_MSSafeMode"];
 
     BOOL result = %orig();
     if (environmentShouldBeReleased) {

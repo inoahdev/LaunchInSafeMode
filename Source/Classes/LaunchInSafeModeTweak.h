@@ -14,5 +14,6 @@
 - (BOOL)isEnabled;
 
 @property (nonatomic, strong) NSString *currentApplicationBundleIdentifier;
+@property (nonatomic, strong) NSNumber *safeModeNumber;
 @property (nonatomic, strong) NSMutableDictionary<NSString *, NSArray<SBSApplicationShortcutItem *> *> *cachedShortcutItems;
 @end

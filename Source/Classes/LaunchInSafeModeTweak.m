@@ -52,6 +52,7 @@ static void LoadPreferences() {
     if (self = [super init]) {
         _cachedShortcutItems = [[NSMutableDictionary alloc] init];
         _currentApplicationBundleIdentifier = nil;
+        _safeModeNumber = [[NSNumber alloc] initWithBool:YES];
     }
 
     return self;
@@ -63,6 +64,8 @@ static void LoadPreferences() {
 
 - (void)dealloc {
     [_cachedShortcutItems release];
+    [_safeModeNumber release];
+
     [super dealloc];
 }
 @end
