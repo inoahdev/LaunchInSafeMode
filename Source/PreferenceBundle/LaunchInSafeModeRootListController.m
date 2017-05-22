@@ -10,10 +10,10 @@
 
 @implementation LaunchInSafeModeRootListController
 - (NSArray *)specifiers {
-	if (!_specifiers) {
-		_specifiers = [[self loadSpecifiersFromPlistName:@"LaunchInSafeMode" target:self] retain];
-	}
+    if (!_specifiers) {
+        _specifiers = [[self loadSpecifiersFromPlistName:@"LaunchInSafeMode" target:self] retain];
+    }
 
-	return _specifiers;
+    return _specifiers;
 }
 @end

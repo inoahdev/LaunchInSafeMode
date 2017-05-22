@@ -2,30 +2,30 @@
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
 <dict>
-	<key>items</key>
-	<array>
-		<dict>
-			<key>cell</key>
-			<string>PSGroupCell</string>
-			<key>label</key>
-			<string>Enable Tweak</string>
-		</dict>
-		<dict>
-			<key>cell</key>
-			<string>PSSwitchCell</string>
-			<key>default</key>
-			<true/>
-			<key>defaults</key>
-			<string>com.inoahdev.launchinsafemode</string>
-			<key>key</key>
-			<string>kEnabled</string>
-			<key>label</key>
-			<string>Enabled</string>
+    <key>items</key>
+    <array>
+        <dict>
+            <key>cell</key>
+            <string>PSGroupCell</string>
+            <key>label</key>
+            <string>Enable Tweak</string>
+        </dict>
+        <dict>
+            <key>cell</key>
+            <string>PSSwitchCell</string>
+            <key>default</key>
+            <true/>
+            <key>defaults</key>
+            <string>com.inoahdev.launchinsafemode</string>
+            <key>key</key>
+            <string>kEnabled</string>
+            <key>label</key>
+            <string>Enabled</string>
             <key>PostNotification</key>
             <string>iNoahDevLaunchInSafeModePreferencesChangedNotification</string>
-		</dict>
-	</array>
-	<key>title</key>
-	<string>LaunchInSafeMode</string>
+        </dict>
+    </array>
+    <key>title</key>
+    <string>LaunchInSafeMode</string>
 </dict>
 </plist>
