@@ -23,7 +23,7 @@ static void InitializePreferences(NSDictionary **preferences) {
         }
     }
 
-    if (!preferences) {
+    if (!*preferences) {
         NSNumber *enabledNumber = [[NSNumber alloc] initWithBool:YES];
         *preferences = [[NSDictionary alloc] initWithObjectsAndKeys:enabledNumber, @"kEnabled", nil];
 
