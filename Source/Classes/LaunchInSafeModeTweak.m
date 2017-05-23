@@ -11,7 +11,7 @@
 @interface LaunchInSafeModeTweak ()
 @end
 
-static NSDictionary *preferences;
+static NSDictionary *preferences = nil;
 static CFStringRef applicationID = (__bridge CFStringRef)@"com.inoahdev.launchinsafemode";
 
 static void LoadPreferences() {
@@ -24,7 +24,10 @@ static void LoadPreferences() {
     }
 
     if (!preferences) {
-        preferences = @{ @"kEnabled" : @YES };
+        NSNumber *enabledNumber = [[NSNumber alloc] initWithBool:YES];
+        preferences = [[NSDictionary alloc] initWithObjectsAndKeys:enabledNumber, @"kEnabled", nil];
+
+        [enabledNumber release];
     }
 }
 
@@ -66,6 +69,7 @@ static void LoadPreferences() {
     [_cachedShortcutItems release];
     [_safeModeNumber release];
 
+    [preferences release];
     [super dealloc];
 }
 @end

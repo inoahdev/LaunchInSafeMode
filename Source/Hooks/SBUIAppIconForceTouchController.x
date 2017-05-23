@@ -11,12 +11,12 @@
 #include "../Headers/FrontBoardServices/FBSystemService.h"
 #include "../Headers/SpringBoardUI/SBUIAppIconForceTouchShortcutViewController.h"
 
-static NSString *const kLaunchInSafeModeTweakLaunchInSafeMode = @"kLaunchInSafeModeTweakLaunchInSafeMode";
+static NSString *const kLaunchInSafeModeTweakShortcutItemIdentifier = @"com.inoahdev.launchinsafemode.safemode";
 
 %hook SBUIAppIconForceTouchController
 - (void)appIconForceTouchShortcutViewController:(SBUIAppIconForceTouchShortcutViewController *)appIconForceTouchShortcutViewController activateApplicationShortcutItem:(SBSApplicationShortcutItem *)applicationShortcutItem {
     NSString *applicationShortcutItemType = [applicationShortcutItem type];
-    if (![applicationShortcutItemType isEqualToString:kLaunchInSafeModeTweakLaunchInSafeMode]) {
+    if (![applicationShortcutItemType isEqualToString:kLaunchInSafeModeTweakShortcutItemIdentifier]) {
         return %orig();
     }
 

@@ -11,7 +11,7 @@
 #import "../Headers/SpringBoardServices/SBSApplicationShortcutItem.h"
 #import "../Headers/SpringBoardUI/SBUIAppIconForceTouchControllerDataProvider.h"
 
-static NSString *const kLaunchInSafeModeTweakLaunchInSafeMode = @"kLaunchInSafeModeTweakLaunchInSafeMode";
+static NSString *const kLaunchInSafeModeTweakShortcutItemIdentifier = @"com.inoahdev.launchinsafemode.safemode";
 
 %hook SBUIAppIconForceTouchControllerDataProvider
 - (NSArray *)applicationShortcutItems {
@@ -24,7 +24,7 @@ static NSString *const kLaunchInSafeModeTweakLaunchInSafeMode = @"kLaunchInSafeM
     }
 
     NSMutableDictionary *launchInSafeModeTweakCachedShortcutItems = [launchInSafeModeTweak cachedShortcutItems];
-    NSString *bundleIdentifier = [self applicationBundleIdentifier];
+    NSString *bundleIdentifier = [[self applicationBundleIdentifier] copy];
 
     NSArray<SBSApplicationShortcutItem *> *applicationShortcutItems = [launchInSafeModeTweakCachedShortcutItems objectForKey:bundleIdentifier];
     if (applicationShortcutItems) {
@@ -35,7 +35,7 @@ static NSString *const kLaunchInSafeModeTweakLaunchInSafeMode = @"kLaunchInSafeM
 
     [applicationShortcutItem setLocalizedTitle:@"Safe Mode"];
     [applicationShortcutItem setBundleIdentifierToLaunch:bundleIdentifier];
-    [applicationShortcutItem setType:kLaunchInSafeModeTweakLaunchInSafeMode];
+    [applicationShortcutItem setType:kLaunchInSafeModeTweakShortcutItemIdentifier];
 
     NSMutableArray *newApplicationShortcutItems = [originalApplicationShortcutItems mutableCopy];
 
@@ -44,6 +44,7 @@ static NSString *const kLaunchInSafeModeTweakLaunchInSafeMode = @"kLaunchInSafeM
 
     [newApplicationShortcutItems release];
     [applicationShortcutItem release];
+    [bundleIdentifier release];
 
     return newApplicationShortcutItems;
 }
