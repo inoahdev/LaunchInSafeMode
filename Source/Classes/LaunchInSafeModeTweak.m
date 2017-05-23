@@ -9,26 +9,34 @@
 #include "LaunchInSafeModeTweak.h"
 
 @interface LaunchInSafeModeTweak ()
+@property (nonatomic, strong) NSDictionary *preferences;
 @end
 
-static NSDictionary *preferences = nil;
 static CFStringRef applicationID = (__bridge CFStringRef)@"com.inoahdev.launchinsafemode";
 
-static void LoadPreferences() {
+static void InitializePreferences(NSDictionary **preferences) {
     if (CFPreferencesAppSynchronize(applicationID)) {
         CFArrayRef keyList = CFPreferencesCopyKeyList(applicationID, kCFPreferencesCurrentUser, kCFPreferencesAnyHost);
         if (keyList) {
-            preferences = (NSDictionary *)CFPreferencesCopyMultiple(keyList, applicationID, kCFPreferencesCurrentUser, kCFPreferencesAnyHost);
+            *preferences = (NSDictionary *)CFPreferencesCopyMultiple(keyList, applicationID, kCFPreferencesCurrentUser, kCFPreferencesAnyHost);
             CFRelease(keyList);
         }
     }
 
     if (!preferences) {
         NSNumber *enabledNumber = [[NSNumber alloc] initWithBool:YES];
-        preferences = [[NSDictionary alloc] initWithObjectsAndKeys:enabledNumber, @"kEnabled", nil];
+        *preferences = [[NSDictionary alloc] initWithObjectsAndKeys:enabledNumber, @"kEnabled", nil];
 
         [enabledNumber release];
     }
+}
+
+static void LoadPreferences() {
+    NSDictionary *preferences = nil;
+    InitializePreferences(&preferences);
+
+    LaunchInSafeModeTweak *launchInSafeModeTweak = [LaunchInSafeModeTweak sharedInstance];
+    [launchInSafeModeTweak setPreferences:preferences];
 }
 
 @implementation LaunchInSafeModeTweak
@@ -45,7 +53,6 @@ static void LoadPreferences() {
                                         (__bridge CFStringRef)@"iNoahDevLaunchInSafeModePreferencesChangedNotification",
                                         NULL,
                                         CFNotificationSuspensionBehaviorDeliverImmediately);
-        LoadPreferences();
     });
 
     return sharedInstance;
@@ -56,20 +63,22 @@ static void LoadPreferences() {
         _cachedShortcutItems = [[NSMutableDictionary alloc] init];
         _currentApplicationBundleIdentifier = nil;
         _safeModeNumber = [[NSNumber alloc] initWithBool:YES];
+
+        InitializePreferences(&_preferences);
     }
 
     return self;
 }
 
 - (BOOL)isEnabled {
-    return [[preferences objectForKey:@"kEnabled"] boolValue];
+    return [[_preferences objectForKey:@"kEnabled"] boolValue];
 }
 
 - (void)dealloc {
     [_cachedShortcutItems release];
     [_safeModeNumber release];
 
-    [preferences release];
+    [_preferences release];
     [super dealloc];
 }
 @end
