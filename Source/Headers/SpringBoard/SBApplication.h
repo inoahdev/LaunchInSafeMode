@@ -1,5 +1,5 @@
 //
-//  Source/Headers/BaseBoard/BSAuditToken.h
+//  Source/Headers/SpringBoard/SBApplication.h
 //  LaunchInSafeMode
 //
 //  Created by inoahdev on 5/20/17.
@@ -8,6 +8,6 @@
 
 #import <Foundation/Foundation.h>
 
-@interface BSAuditToken : NSObject
-+ (instancetype)tokenForCurrentProcess;
+@interface SBApplication : NSObject
+- (NSString *)bundleIdentifier;
 @end

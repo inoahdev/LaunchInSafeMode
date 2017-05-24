@@ -6,7 +6,7 @@
 //  Copyright © 2017 inoahdev. All rights reserved.
 //
 
-#include "LaunchInSafeModeRootListController.h"
+#import "LaunchInSafeModeRootListController.h"
 
 @implementation LaunchInSafeModeRootListController
 - (NSArray *)specifiers {

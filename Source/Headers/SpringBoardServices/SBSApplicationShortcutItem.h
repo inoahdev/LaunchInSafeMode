@@ -1,5 +1,5 @@
 //
-//  Source/Headers/SBSApplicationShortcutItem.h
+//  Source/Headers/SpringBoardServices/SBSApplicationShortcutItem.h
 //  LaunchInSafeMode
 //
 //  Created by inoahdev on 5/20/17.

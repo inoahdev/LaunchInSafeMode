@@ -6,7 +6,7 @@
 //  Copyright © 2017 inoahdev. All rights reserved.
 //
 
-#include "LaunchInSafeModeTweak.h"
+#import "LaunchInSafeModeTweak.h"
 
 @interface LaunchInSafeModeTweak ()
 @property (nonatomic, strong) NSDictionary *preferences;

@@ -1,5 +1,5 @@
 //
-//  Source/Hooks/SBApplicationShortcutStoreManager.x
+//  Source/Hooks/SBApplicationShortcutMenu.x
 //  LaunchInSafeMode
 //
 //  Created by inoahdev on 5/20/17.
@@ -7,16 +7,15 @@
 //
 
 #import <version.h>
-#import "../Classes/LaunchInSafeModeTweak.h"
 
-#import "../Headers/SpringBoardServices/SBSApplicationShortcutItem.h"
-#import "../Headers/SpringBoardUI/SBUIAppIconForceTouchControllerDataProvider.h"
+#import "../Classes/LaunchInSafeModeTweak.h"
+#import "../Headers/SpringBoard/SBApplicationShortcutMenu.h"
 
 static NSString *const kLaunchInSafeModeTweakShortcutItemIdentifier = @"com.inoahdev.launchinsafemode.safemode";
 
-%group iOS10
-%hook SBUIAppIconForceTouchControllerDataProvider
-- (NSArray *)applicationShortcutItems {
+%group iOS9
+%hook SBApplicationShortcutMenu
+- (NSArray<SBSApplicationShortcutItem *> *)_shortcutItemsToDisplay {
     LaunchInSafeModeTweak *launchInSafeModeTweak = [LaunchInSafeModeTweak sharedInstance];
     NSArray *originalApplicationShortcutItems = %orig();
 
@@ -25,10 +24,12 @@ static NSString *const kLaunchInSafeModeTweakShortcutItemIdentifier = @"com.inoa
         return originalApplicationShortcutItems;
     }
 
-    NSMutableDictionary *launchInSafeModeTweakCachedShortcutItems = [launchInSafeModeTweak cachedShortcutItems];
-    NSString *bundleIdentifier = [[self applicationBundleIdentifier] retain];
+    SBApplication *application = [self application];
+    NSString *bundleIdentifier = [application bundleIdentifier];
 
+    NSMutableDictionary *launchInSafeModeTweakCachedShortcutItems = [launchInSafeModeTweak cachedShortcutItems];
     NSArray<SBSApplicationShortcutItem *> *applicationShortcutItems = [launchInSafeModeTweakCachedShortcutItems objectForKey:bundleIdentifier];
+
     if (applicationShortcutItems) {
         return applicationShortcutItems;
     }
@@ -51,27 +52,11 @@ static NSString *const kLaunchInSafeModeTweakShortcutItemIdentifier = @"com.inoa
     return [newApplicationShortcutItems autorelease];
 }
 
-- (void)_installedAppsDidChange:(NSNotification *)installedAppsChangedNotification {
-    NSDictionary *installedAppsChangedNotificationUserInfo = [installedAppsChangedNotification userInfo];
-    NSSet *removedApplicationBundleIdentifiers = [installedAppsChangedNotificationUserInfo objectForKey:@"SBInstalledApplicationsRemovedBundleIDs"];
-
-    if (removedApplicationBundleIdentifiers) {
-        LaunchInSafeModeTweak *launchInSafeModeTweak = [LaunchInSafeModeTweak sharedInstance];
-        NSMutableDictionary *launchInSafeModeTweakCachedShortcutItems = [launchInSafeModeTweak cachedShortcutItems];
-
-        for (NSString *removedApplicationBundleIdentifier in removedApplicationBundleIdentifiers) {
-            [launchInSafeModeTweakCachedShortcutItems removeObjectForKey:removedApplicationBundleIdentifier];
-        }
-    }
-
-    %orig();
-}
-
 %end
 %end
 
 %ctor {
-    if (IS_IOS_BETWEEN(iOS_10_0, iOS_10_2)) {
-        %init(iOS10);
+    if (IS_IOS_BETWEEN(iOS_9_0, iOS_9_3)) {
+        %init(iOS9);
     }
 }

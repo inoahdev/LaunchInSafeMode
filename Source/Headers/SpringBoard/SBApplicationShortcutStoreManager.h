@@ -1,5 +1,5 @@
 //
-//  Source/Headers/SBApplicationShortcutStoreManager.h
+//  Source/Headers/SpringBoard/SBApplicationShortcutStoreManager.h
 //  LaunchInSafeMode
 //
 //  Created by inoahdev on 5/20/17.

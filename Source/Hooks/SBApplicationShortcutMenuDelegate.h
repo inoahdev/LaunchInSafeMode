@@ -1,5 +1,5 @@
 //
-//  Source/Hooks/SBUIAppIconForceTouchController.x
+//  Source/Hooks/SBApplicationShortcutMenu.x
 //  LaunchInSafeMode
 //
 //  Created by inoahdev on 5/20/17.
@@ -7,23 +7,20 @@
 //
 
 #import <version.h>
-#import "../Classes/LaunchInSafeModeTweak.h"
-
-#import "../Headers/FrontBoardServices/FBSystemService.h"
-#import "../Headers/SpringBoardUI/SBUIAppIconForceTouchShortcutViewController.h"
+#import "../Headers/SpringBoardServices/SBSApplicationShortcutItem.h"
 
 static NSString *const kLaunchInSafeModeTweakShortcutItemIdentifier = @"com.inoahdev.launchinsafemode.safemode";
 
-%group iOS10
-%hook SBUIAppIconForceTouchController
-- (void)appIconForceTouchShortcutViewController:(SBUIAppIconForceTouchShortcutViewController *)appIconForceTouchShortcutViewController activateApplicationShortcutItem:(SBSApplicationShortcutItem *)applicationShortcutItem {
-    NSString *applicationShortcutItemType = [applicationShortcutItem type];
+%group iOS9
+%hook SBApplicationShortcutMenuDelegate
+- (void)applicationShortcutMenu:(SBApplicationShortcutMenu *)applicationShortcutMenu activateShortcutItem:(SBSApplicationShortcutItem *)shortcutItem index:(NSUInteger)index {
+    NSString *applicationShortcutItemType = [shortcutItem type];
     if (![applicationShortcutItemType isEqualToString:kLaunchInSafeModeTweakShortcutItemIdentifier]) {
         return %orig();
     }
 
     LaunchInSafeModeTweak *launchInSafeModeTweak = [LaunchInSafeModeTweak sharedInstance];
-    NSString *currentApplicationBundleIdentifier = [applicationShortcutItem bundleIdentifierToLaunch];
+    NSString *currentApplicationBundleIdentifier = [shortcutItem bundleIdentifierToLaunch];
 
     [launchInSafeModeTweak setCurrentApplicationBundleIdentifier:currentApplicationBundleIdentifier];
     [[%c(FBSystemService) sharedInstance] terminateApplication:currentApplicationBundleIdentifier forReason:1 andReport:YES withDescription:nil source:[%c(BSAuditToken) tokenForCurrentProcess] completion:nil];
@@ -35,7 +32,7 @@ static NSString *const kLaunchInSafeModeTweakShortcutItemIdentifier = @"com.inoa
 %end
 
 %ctor {
-    if (IS_IOS_BETWEEN(iOS_10_0, iOS_10_2)) {
-        %init(iOS10);
+    if (IS_IOS_BETWEEN(iOS_9_0, iOS_9_3_3)) {
+        %init(iOS9);
     }
 }
