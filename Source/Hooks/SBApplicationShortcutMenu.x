@@ -17,38 +17,40 @@ static NSString *const kLaunchInSafeModeTweakShortcutItemIdentifier = @"com.inoa
 %hook SBApplicationShortcutMenu
 - (NSArray<SBSApplicationShortcutItem *> *)_shortcutItemsToDisplay {
     LaunchInSafeModeTweak *launchInSafeModeTweak = [LaunchInSafeModeTweak sharedInstance];
-    NSArray *originalApplicationShortcutItems = %orig();
+    NSMutableArray *originalApplicationShortcutItems = (NSMutableArray *)%orig();
 
     BOOL launchInSafeModeTweakIsEnabled = [launchInSafeModeTweak isEnabled];
     if (!launchInSafeModeTweakIsEnabled) {
         return originalApplicationShortcutItems;
     }
 
+
     SBApplication *application = [self application];
-    NSString *bundleIdentifier = [application bundleIdentifier];
+    NSString *applicationBundleIdentifier = [application bundleIdentifier];
 
     NSMutableDictionary *launchInSafeModeTweakCachedShortcutItems = [launchInSafeModeTweak cachedShortcutItems];
-    NSArray<SBSApplicationShortcutItem *> *applicationShortcutItems = [launchInSafeModeTweakCachedShortcutItems objectForKey:bundleIdentifier];
+    SBSApplicationShortcutItem *applicationShortcutItem = [launchInSafeModeTweakCachedShortcutItems objectForKey:applicationBundleIdentifier];
 
-    if (applicationShortcutItems) {
-        return applicationShortcutItems;
+    if (!applicationShortcutItem) {
+        applicationShortcutItem = [[%c(SBSApplicationShortcutItem) alloc] init];
+
+        [applicationShortcutItem setLocalizedTitle:@"Safe Mode"];
+        [applicationShortcutItem setBundleIdentifierToLaunch:applicationBundleIdentifier];
+        [applicationShortcutItem setType:kLaunchInSafeModeTweakShortcutItemIdentifier];
+
+        [launchInSafeModeTweakCachedShortcutItems setObject:applicationShortcutItem forKey:applicationBundleIdentifier];
+        [applicationShortcutItem release];
     }
 
-    SBSApplicationShortcutItem *applicationShortcutItem = [[%c(SBSApplicationShortcutItem) alloc] init];
+    if (![originalApplicationShortcutItems isKindOfClass:%c(NSMutableArray)]) {
+        NSMutableArray *newApplicationShortcutItems = [originalApplicationShortcutItems mutableCopy];
+        [newApplicationShortcutItems addObject:applicationShortcutItem];
 
-    [applicationShortcutItem setLocalizedTitle:@"Safe Mode"];
-    [applicationShortcutItem setBundleIdentifierToLaunch:bundleIdentifier];
-    [applicationShortcutItem setType:kLaunchInSafeModeTweakShortcutItemIdentifier];
+        return [newApplicationShortcutItems autorelease];
+    }
 
-    NSMutableArray *newApplicationShortcutItems = [originalApplicationShortcutItems mutableCopy];
-
-    [newApplicationShortcutItems addObject:applicationShortcutItem];
-    [launchInSafeModeTweakCachedShortcutItems setObject:newApplicationShortcutItems forKey:bundleIdentifier];
-
-    [applicationShortcutItem release];
-    [bundleIdentifier release];
-
-    return [newApplicationShortcutItems autorelease];
+    [originalApplicationShortcutItems addObject:applicationShortcutItem];
+    return originalApplicationShortcutItems;
 }
 
 %end

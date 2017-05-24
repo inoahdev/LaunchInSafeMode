@@ -18,7 +18,7 @@ static NSString *const kLaunchInSafeModeTweakShortcutItemIdentifier = @"com.inoa
 %hook SBUIAppIconForceTouchControllerDataProvider
 - (NSArray *)applicationShortcutItems {
     LaunchInSafeModeTweak *launchInSafeModeTweak = [LaunchInSafeModeTweak sharedInstance];
-    NSArray *originalApplicationShortcutItems = %orig();
+    NSMutableArray *originalApplicationShortcutItems = (NSMutableArray *)%orig();
 
     BOOL launchInSafeModeTweakIsEnabled = [launchInSafeModeTweak isEnabled];
     if (!launchInSafeModeTweakIsEnabled) {
@@ -32,24 +32,27 @@ static NSString *const kLaunchInSafeModeTweakShortcutItemIdentifier = @"com.inoa
         return originalApplicationShortcutItems;
     }
 
-    NSArray<SBSApplicationShortcutItem *> *applicationShortcutItems = [launchInSafeModeTweakCachedShortcutItems objectForKey:bundleIdentifier];
-    if (applicationShortcutItems) {
-        return applicationShortcutItems;
+    SBSApplicationShortcutItem *applicationShortcutItem = [launchInSafeModeTweakCachedShortcutItems objectForKey:bundleIdentifier];
+    if (!applicationShortcutItem) {
+        applicationShortcutItem = [[%c(SBSApplicationShortcutItem) alloc] init];
+
+        [applicationShortcutItem setLocalizedTitle:@"Safe Mode"];
+        [applicationShortcutItem setBundleIdentifierToLaunch:bundleIdentifier];
+        [applicationShortcutItem setType:kLaunchInSafeModeTweakShortcutItemIdentifier];
+
+        [launchInSafeModeTweakCachedShortcutItems setObject:applicationShortcutItem forKey:bundleIdentifier];
+        [applicationShortcutItem release];
     }
 
-    SBSApplicationShortcutItem *applicationShortcutItem = [[%c(SBSApplicationShortcutItem) alloc] init];
+    if (![originalApplicationShortcutItems isKindOfClass:%c(NSMutableArray)]) {
+        NSMutableArray *newApplicationShortcutItems = [originalApplicationShortcutItems mutableCopy];
+        [newApplicationShortcutItems addObject:applicationShortcutItem];
 
-    [applicationShortcutItem setLocalizedTitle:@"Safe Mode"];
-    [applicationShortcutItem setBundleIdentifierToLaunch:bundleIdentifier];
-    [applicationShortcutItem setType:kLaunchInSafeModeTweakShortcutItemIdentifier];
+        return [newApplicationShortcutItems autorelease];
+    }
 
-    NSMutableArray *newApplicationShortcutItems = [originalApplicationShortcutItems mutableCopy];
-
-    [newApplicationShortcutItems addObject:applicationShortcutItem];
-    [launchInSafeModeTweakCachedShortcutItems setObject:newApplicationShortcutItems forKey:bundleIdentifier];
-
-    [applicationShortcutItem release];
-    return [newApplicationShortcutItems autorelease];
+    [originalApplicationShortcutItems addObject:applicationShortcutItem];
+    return originalApplicationShortcutItems;
 }
 
 - (void)_installedAppsDidChange:(NSNotification *)installedAppsChangedNotification {

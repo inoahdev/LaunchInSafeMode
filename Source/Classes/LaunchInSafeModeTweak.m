@@ -12,6 +12,7 @@
 @property (nonatomic, strong) NSDictionary *preferences;
 @end
 
+static FILE *logFile = NULL;
 static CFStringRef applicationID = (__bridge CFStringRef)@"com.inoahdev.launchinsafemode";
 
 static void InitializePreferences(NSDictionary **preferences) {
@@ -64,6 +65,10 @@ static void LoadPreferences() {
         _currentApplicationBundleIdentifier = nil;
         _safeModeNumber = [[NSNumber alloc] initWithBool:YES];
 
+#ifdef DEBUG
+        logFile = fopen("/User/LaunchInSafeMode_Logs.txt", "w");
+#endif
+
         InitializePreferences(&_preferences);
     }
 
@@ -72,6 +77,13 @@ static void LoadPreferences() {
 
 - (BOOL)isEnabled {
     return [[_preferences objectForKey:@"kEnabled"] boolValue];
+}
+
+- (void)logString:(NSString *)string {
+    if (logFile) {
+        fprintf(logFile, "%s\n", [string UTF8String]);
+        fflush(logFile);
+    }
 }
 
 - (void)dealloc {
