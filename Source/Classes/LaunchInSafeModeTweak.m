@@ -12,7 +12,10 @@
 @property (nonatomic, strong) NSDictionary *preferences;
 @end
 
+#ifdef DEBUG
 static FILE *logFile = NULL;
+#endif
+
 static CFStringRef applicationID = (__bridge CFStringRef)@"com.inoahdev.launchinsafemode";
 
 static void InitializePreferences(NSDictionary **preferences) {
@@ -80,15 +83,23 @@ static void LoadPreferences() {
 }
 
 - (void)logString:(NSString *)string {
+#ifdef DEBUG
     if (logFile) {
         fprintf(logFile, "%s\n", [string UTF8String]);
         fflush(logFile);
     }
+#endif
 }
 
 - (void)dealloc {
     [_cachedShortcutItems release];
     [_safeModeNumber release];
+
+#ifdef DEBUG
+    if (logFile) {
+        fclose(logFile);
+    }
+#endif
 
     [_preferences release];
     [super dealloc];
