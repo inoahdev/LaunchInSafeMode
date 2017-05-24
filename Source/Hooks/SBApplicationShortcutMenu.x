@@ -24,7 +24,6 @@ static NSString *const kLaunchInSafeModeTweakShortcutItemIdentifier = @"com.inoa
         return originalApplicationShortcutItems;
     }
 
-
     SBApplication *application = [self application];
     NSString *applicationBundleIdentifier = [application bundleIdentifier];
 

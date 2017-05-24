@@ -80,15 +80,23 @@ static void LoadPreferences() {
 }
 
 - (void)logString:(NSString *)string {
+#ifdef DEBUG
     if (logFile) {
         fprintf(logFile, "%s\n", [string UTF8String]);
         fflush(logFile);
     }
+#endif
 }
 
 - (void)dealloc {
     [_cachedShortcutItems release];
     [_safeModeNumber release];
+
+#ifdef DEBUG
+    if (logFile) {
+        fclose(logFile);
+    }
+#endif
 
     [_preferences release];
     [super dealloc];
