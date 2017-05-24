@@ -9,7 +9,7 @@
 #import <version.h>
 #import "../Classes/LaunchInSafeModeTweak.h"
 
-#import "../Headers/FrontBoardServices/FBSystemService.h"
+#import "../Headers/FrontBoard/FBSystemService.h"
 #import "../Headers/SpringBoardUI/SBUIAppIconForceTouchShortcutViewController.h"
 
 static NSString *const kLaunchInSafeModeTweakShortcutItemIdentifier = @"com.inoahdev.launchinsafemode.safemode";

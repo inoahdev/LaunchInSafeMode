@@ -26,7 +26,11 @@ static NSString *const kLaunchInSafeModeTweakShortcutItemIdentifier = @"com.inoa
     }
 
     NSMutableDictionary *launchInSafeModeTweakCachedShortcutItems = [launchInSafeModeTweak cachedShortcutItems];
-    NSString *bundleIdentifier = [[self applicationBundleIdentifier] retain];
+    NSString *bundleIdentifier = [self applicationBundleIdentifier];
+
+    if (!bundleIdentifier) {
+        return originalApplicationShortcutItems;
+    }
 
     NSArray<SBSApplicationShortcutItem *> *applicationShortcutItems = [launchInSafeModeTweakCachedShortcutItems objectForKey:bundleIdentifier];
     if (applicationShortcutItems) {
@@ -44,10 +48,7 @@ static NSString *const kLaunchInSafeModeTweakShortcutItemIdentifier = @"com.inoa
     [newApplicationShortcutItems addObject:applicationShortcutItem];
     [launchInSafeModeTweakCachedShortcutItems setObject:newApplicationShortcutItems forKey:bundleIdentifier];
 
-    [newApplicationShortcutItems release];
     [applicationShortcutItem release];
-    [bundleIdentifier release];
-
     return [newApplicationShortcutItems autorelease];
 }
 

@@ -7,7 +7,11 @@
 //
 
 #import <version.h>
-#import "../Headers/SpringBoardServices/SBSApplicationShortcutItem.h"
+#import "../Classes/LaunchInSafeModeTweak.h"
+
+#import "../Headers/BaseBoard/BSAuditToken.h"
+#import "../Headers/FrontBoard/FBSystemService.h"
+#import "../Headers/SpringBoard/SBApplicationShortcutMenu.h"
 
 static NSString *const kLaunchInSafeModeTweakShortcutItemIdentifier = @"com.inoahdev.launchinsafemode.safemode";
 
@@ -32,7 +36,7 @@ static NSString *const kLaunchInSafeModeTweakShortcutItemIdentifier = @"com.inoa
 %end
 
 %ctor {
-    if (IS_IOS_BETWEEN(iOS_9_0, iOS_9_3_3)) {
+    if (IS_IOS_BETWEEN(iOS_9_0, iOS_9_3)) {
         %init(iOS9);
     }
 }

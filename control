@@ -1,7 +1,7 @@
 Package: com.inoahdev.launchinsafemode
 Name: LaunchInSafeMode
 Depends: mobilesubstrate, preferenceloader
-Version: 1.0
+Version: 1.0.1
 Architecture: iphoneos-arm
 Description: Use Force Touch to launch any application in safe mode!
 Maintainer: inoahdev

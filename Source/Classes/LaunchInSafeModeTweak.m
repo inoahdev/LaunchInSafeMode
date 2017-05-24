@@ -77,7 +77,7 @@ static void LoadPreferences() {
 - (void)dealloc {
     [_cachedShortcutItems release];
     [_safeModeNumber release];
-
+    
     [_preferences release];
     [super dealloc];
 }

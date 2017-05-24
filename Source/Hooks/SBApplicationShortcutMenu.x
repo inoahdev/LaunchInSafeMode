@@ -45,7 +45,6 @@ static NSString *const kLaunchInSafeModeTweakShortcutItemIdentifier = @"com.inoa
     [newApplicationShortcutItems addObject:applicationShortcutItem];
     [launchInSafeModeTweakCachedShortcutItems setObject:newApplicationShortcutItems forKey:bundleIdentifier];
 
-    [newApplicationShortcutItems release];
     [applicationShortcutItem release];
     [bundleIdentifier release];
 
