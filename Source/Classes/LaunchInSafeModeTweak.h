@@ -10,7 +10,7 @@
 #import "../Headers/SpringBoardServices/SBSApplicationShortcutItem.h"
 
 #ifdef DEBUG
-#define LaunchInSafeModeLog(str, ...) \
+#define LaunchInSafeModeLogFormat(str, ...) \
 do { \
     NSString *formattedString = [[NSString alloc] initWithFormat:str, ##__VA_ARGS__]; \
     [[LaunchInSafeModeTweak sharedInstance] logString:formattedString]; \
@@ -18,7 +18,7 @@ do { \
     [formattedString release]; \
 } while (false);
 #else
-#define LaunchInSafeModeLog(str, ...)
+#define LaunchInSafeModeLogFormat(str, ...)
 #endif
 
 @interface LaunchInSafeModeTweak : NSObject
