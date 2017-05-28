@@ -28,7 +28,7 @@ static NSString *const kLaunchInSafeModeTweakShortcutItemIdentifier = @"com.inoa
     NSMutableDictionary *launchInSafeModeTweakCachedShortcutItems = [launchInSafeModeTweak cachedShortcutItems];
     NSString *bundleIdentifier = [self applicationBundleIdentifier];
 
-    if (!bundleIdentifier) {
+    if (!bundleIdentifier || ![bundleIdentifier isKindOfClass:%c(NSString)]) {
         return originalApplicationShortcutItems;
     }
 
