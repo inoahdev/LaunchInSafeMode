@@ -26,7 +26,7 @@ static NSString *const kLaunchInSafeModeTweakShortcutItemIdentifier = @"com.inoa
     NSString *currentApplicationBundleIdentifier = [applicationShortcutItem bundleIdentifierToLaunch];
 
     [launchInSafeModeTweak setCurrentApplicationBundleIdentifier:currentApplicationBundleIdentifier];
-    [[%c(FBSystemService) sharedInstance] terminateApplication:currentApplicationBundleIdentifier forReason:1 andReport:YES withDescription:nil source:[%c(BSAuditToken) tokenForCurrentProcess] completion:nil];
+    [[%c(FBSystemService) sharedInstance] terminateApplication:currentApplicationBundleIdentifier forReason:1 andReport:NO withDescription:nil source:[%c(BSAuditToken) tokenForCurrentProcess] completion:nil];
 
     %orig();
 }
