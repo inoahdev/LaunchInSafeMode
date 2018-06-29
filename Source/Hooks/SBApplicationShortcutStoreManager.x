@@ -31,7 +31,7 @@
 %end
 
 %ctor {
-    if (IS_IOS_BETWEEN(iOS_9_0, iOS_11_2)) {
+    if (IS_IOS_OR_NEWER(iOS_9_0)) {
         %init(iOS9Up);
     }
 }
