@@ -3,7 +3,7 @@
 //  LaunchInSafeMode
 //
 //  Created by inoahdev on 6/29/18.
-//  Copyright © 2017 inoahdev. All rights reserved.
+//  Copyright © 2018 inoahdev. All rights reserved.
 //
 
 #import <version.h>
