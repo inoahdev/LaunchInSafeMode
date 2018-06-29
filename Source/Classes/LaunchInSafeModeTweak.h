@@ -21,13 +21,18 @@ do { \
 #define LaunchInSafeModeLogFormat(str, ...)
 #endif
 
+static NSString *const kLaunchInSafeModeShortcutItemIdentifier =
+    @"com.inoahdev.launchinsafemode.safemode";
+
 @interface LaunchInSafeModeTweak : NSObject
 + (instancetype)sharedInstance;
 - (BOOL)isEnabled;
 
+#ifdef DEBUG
 - (void)logString:(NSString *)string;
+#endif
 
-@property (nonatomic, strong) NSString *currentApplicationBundleIdentifier;
+@property (nonatomic, strong) NSString *currentBundleIdentifier;
 @property (nonatomic, strong) NSNumber *safeModeNumber;
 @property (nonatomic, strong) NSMutableDictionary<NSString *, SBSApplicationShortcutItem *> *cachedShortcutItems;
 @end

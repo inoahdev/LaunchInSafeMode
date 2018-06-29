@@ -13,21 +13,26 @@
 #import "../Headers/FrontBoard/FBSystemService.h"
 #import "../Headers/SpringBoard/SBApplicationShortcutMenu.h"
 
-static NSString *const kLaunchInSafeModeTweakShortcutItemIdentifier = @"com.inoahdev.launchinsafemode.safemode";
-
 %group iOS9
 %hook SBApplicationShortcutMenuDelegate
 - (void)applicationShortcutMenu:(SBApplicationShortcutMenu *)applicationShortcutMenu activateShortcutItem:(SBSApplicationShortcutItem *)shortcutItem index:(NSUInteger)index {
-    NSString *applicationShortcutItemType = [shortcutItem type];
-    if (![applicationShortcutItemType isEqualToString:kLaunchInSafeModeTweakShortcutItemIdentifier]) {
+    NSString *shortcutItemType = [shortcutItem type];
+    if (![shortcutItemType isEqualToString:kLaunchInSafeModeShortcutItemIdentifier]) {
         return %orig();
     }
 
-    LaunchInSafeModeTweak *launchInSafeModeTweak = [LaunchInSafeModeTweak sharedInstance];
-    NSString *currentApplicationBundleIdentifier = [shortcutItem bundleIdentifierToLaunch];
+    LaunchInSafeModeTweak *tweak = [LaunchInSafeModeTweak sharedInstance];
+    
+    NSString *bundleIdentifier = [shortcutItem bundleIdentifierToLaunch];
+    [tweak setCurrentBundleIdentifier:bundleIdentifier];
 
-    [launchInSafeModeTweak setCurrentApplicationBundleIdentifier:currentApplicationBundleIdentifier];
-    [[%c(FBSystemService) sharedInstance] terminateApplication:currentApplicationBundleIdentifier forReason:1 andReport:NO withDescription:nil source:[%c(BSAuditToken) tokenForCurrentProcess] completion:nil];
+    BSAuditToken *token = [%c(BSAuditToken)tokenForCurrentProcess];
+    [[%c(FBSystemService) sharedInstance] terminateApplication:bundleIdentifier
+                                                     forReason:1
+                                                     andReport:NO
+                                               withDescription:nil
+                                                        source:token
+                                                    completion:nil];
 
     %orig();
 }

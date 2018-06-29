@@ -12,21 +12,26 @@
 #import "../Headers/FrontBoard/FBSystemService.h"
 #import "../Headers/SpringBoardUI/SBUIAppIconForceTouchShortcutViewController.h"
 
-static NSString *const kLaunchInSafeModeTweakShortcutItemIdentifier = @"com.inoahdev.launchinsafemode.safemode";
-
-%group iOS10
+%group iOS10Up
 %hook SBUIAppIconForceTouchController
-- (void)appIconForceTouchShortcutViewController:(SBUIAppIconForceTouchShortcutViewController *)appIconForceTouchShortcutViewController activateApplicationShortcutItem:(SBSApplicationShortcutItem *)applicationShortcutItem {
-    NSString *applicationShortcutItemType = [applicationShortcutItem type];
-    if (![applicationShortcutItemType isEqualToString:kLaunchInSafeModeTweakShortcutItemIdentifier]) {
+- (void)appIconForceTouchShortcutViewController:(SBUIAppIconForceTouchShortcutViewController *)shortcutViewController activateApplicationShortcutItem:(SBSApplicationShortcutItem *)shortcutItem {
+    NSString *shortcutItemType = [shortcutItem type];
+    if (![shortcutItemType isEqualToString:kLaunchInSafeModeShortcutItemIdentifier]) {
         return %orig();
     }
 
-    LaunchInSafeModeTweak *launchInSafeModeTweak = [LaunchInSafeModeTweak sharedInstance];
-    NSString *currentApplicationBundleIdentifier = [applicationShortcutItem bundleIdentifierToLaunch];
+    LaunchInSafeModeTweak *tweak = [LaunchInSafeModeTweak sharedInstance];
 
-    [launchInSafeModeTweak setCurrentApplicationBundleIdentifier:currentApplicationBundleIdentifier];
-    [[%c(FBSystemService) sharedInstance] terminateApplication:currentApplicationBundleIdentifier forReason:1 andReport:NO withDescription:nil source:[%c(BSAuditToken) tokenForCurrentProcess] completion:nil];
+    NSString *bundleIdentifier = [shortcutItem bundleIdentifierToLaunch];
+    [tweak setCurrentBundleIdentifier:bundleIdentifier];
+
+    BSAuditToken *token = [%c(BSAuditToken)tokenForCurrentProcess];
+    [[%c(FBSystemService) sharedInstance] terminateApplication:bundleIdentifier
+                                                     forReason:1
+                                                     andReport:NO
+                                               withDescription:nil
+                                                        source:token
+                                                    completion:nil];
 
     %orig();
 }
@@ -35,7 +40,7 @@ static NSString *const kLaunchInSafeModeTweakShortcutItemIdentifier = @"com.inoa
 %end
 
 %ctor {
-    if (IS_IOS_BETWEEN(iOS_10_0, iOS_10_2)) {
-        %init(iOS10);
+    if (IS_IOS_BETWEEN(iOS_10_0, iOS_11_2)) {
+        %init(iOS10Up);
     }
 }

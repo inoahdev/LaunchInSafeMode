@@ -10,18 +10,18 @@
 
 %hook BSLaunchdUtilities
 + (BOOL)createJobWithLabel:(NSString *)jobLabel bundleIdentifier:(NSString *)bundleIdentifier path:(NSString *)path containerPath:(NSString *)containerPath arguments:(NSArray<NSString *> *)arguments environment:(NSMutableDictionary *)environment standardOutputPath:(NSString *)standardOutputPath standardErrorPath:(NSString *)standardErrorPath machServices:(NSArray<NSString *> *)machServices threadPriority:(NSInteger)threadPriority waitForDebugger:(BOOL)waitForDebugger denyCreatingOtherJobs:(BOOL)denyCreatingOtherJobs runAtLoad:(BOOL)runAtLoad disableASLR:(BOOL)disableASLR systemApp:(BOOL)systemApp {
-    LaunchInSafeModeTweak *launchInSafeModeTweak = [LaunchInSafeModeTweak sharedInstance];
-    NSString *currentApplicationBundleIdentifier = [launchInSafeModeTweak currentApplicationBundleIdentifier];
+    LaunchInSafeModeTweak *tweak = [LaunchInSafeModeTweak sharedInstance];
+    NSString *currentBundleIdentifier = [tweak currentBundleIdentifier];
 
-    if (!currentApplicationBundleIdentifier) {
+    if (!currentBundleIdentifier) {
         return %orig();
     }
 
-    if (![currentApplicationBundleIdentifier isEqualToString:bundleIdentifier]) {
+    if (![currentBundleIdentifier isEqualToString:bundleIdentifier]) {
         return %orig();
     }
 
-    [launchInSafeModeTweak setCurrentApplicationBundleIdentifier:nil];
+    [tweak setCurrentBundleIdentifier:nil];
 
     BOOL environmentShouldBeReleased = NO;
     if (![environment isKindOfClass:%c(NSMutableDictionary)]) {
@@ -29,7 +29,7 @@
         environmentShouldBeReleased = YES;
     }
 
-    [environment setObject:[launchInSafeModeTweak safeModeNumber] forKey:@"_MSSafeMode"];
+    [environment setObject:[tweak safeModeNumber] forKey:@"_MSSafeMode"];
 
     BOOL result = %orig();
     if (environmentShouldBeReleased) {

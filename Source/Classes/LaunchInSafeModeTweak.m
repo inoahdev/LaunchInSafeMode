@@ -20,16 +20,29 @@ static CFStringRef applicationID = (__bridge CFStringRef)@"com.inoahdev.launchin
 
 static void InitializePreferences(NSDictionary **preferences) {
     if (CFPreferencesAppSynchronize(applicationID)) {
-        CFArrayRef keyList = CFPreferencesCopyKeyList(applicationID, kCFPreferencesCurrentUser, kCFPreferencesAnyHost);
+        CFArrayRef keyList =
+            CFPreferencesCopyKeyList(applicationID,
+                                     kCFPreferencesCurrentUser,
+                                     kCFPreferencesAnyHost);
+
         if (keyList) {
-            *preferences = (NSDictionary *)CFPreferencesCopyMultiple(keyList, applicationID, kCFPreferencesCurrentUser, kCFPreferencesAnyHost);
+            *preferences =
+                (NSDictionary *)CFPreferencesCopyMultiple(
+                    keyList,
+                    applicationID,
+                    kCFPreferencesCurrentUser,
+                    kCFPreferencesAnyHost);
+
             CFRelease(keyList);
         }
     }
 
     if (!*preferences) {
         NSNumber *enabledNumber = [[NSNumber alloc] initWithBool:YES];
-        *preferences = [[NSDictionary alloc] initWithObjectsAndKeys:enabledNumber, @"kEnabled", nil];
+        *preferences =
+            [[NSDictionary alloc] initWithObjectsAndKeys:enabledNumber,
+                                                         @"kEnabled",
+                                                         nil];
 
         [enabledNumber release];
     }
@@ -39,9 +52,12 @@ static void LoadPreferences() {
     NSDictionary *preferences = nil;
     InitializePreferences(&preferences);
 
-    LaunchInSafeModeTweak *launchInSafeModeTweak = [LaunchInSafeModeTweak sharedInstance];
-    [launchInSafeModeTweak setPreferences:preferences];
+    LaunchInSafeModeTweak *tweak = [LaunchInSafeModeTweak sharedInstance];
+    [tweak setPreferences:preferences];
 }
+
+static CFStringRef preferencesChangedNotificationString =
+(__bridge CFStringRef)@"iNoahDevLaunchInSafeModePreferencesChangedNotification";
 
 @implementation LaunchInSafeModeTweak
 + (instancetype)sharedInstance {
@@ -51,12 +67,13 @@ static void LoadPreferences() {
     dispatch_once(&onceToken, ^{
         sharedInstance = [[LaunchInSafeModeTweak alloc] init];
 
-        CFNotificationCenterAddObserver(CFNotificationCenterGetDarwinNotifyCenter(),
-                                        NULL,
-                                        (CFNotificationCallback)LoadPreferences,
-                                        (__bridge CFStringRef)@"iNoahDevLaunchInSafeModePreferencesChangedNotification",
-                                        NULL,
-                                        CFNotificationSuspensionBehaviorDeliverImmediately);
+        CFNotificationCenterAddObserver(
+            CFNotificationCenterGetDarwinNotifyCenter(),
+            NULL,
+            (CFNotificationCallback)LoadPreferences,
+            preferencesChangedNotificationString,
+            NULL,
+            CFNotificationSuspensionBehaviorDeliverImmediately);
     });
 
     return sharedInstance;
@@ -65,7 +82,7 @@ static void LoadPreferences() {
 - (instancetype)init {
     if (self = [super init]) {
         _cachedShortcutItems = [[NSMutableDictionary alloc] init];
-        _currentApplicationBundleIdentifier = nil;
+        _currentBundleIdentifier = nil;
         _safeModeNumber = [[NSNumber alloc] initWithBool:YES];
 
 #ifdef DEBUG
@@ -82,18 +99,19 @@ static void LoadPreferences() {
     return [[_preferences objectForKey:@"kEnabled"] boolValue];
 }
 
-- (void)logString:(NSString *)string {
 #ifdef DEBUG
+- (void)logString:(NSString *)string {
     if (logFile) {
         fprintf(logFile, "%s\n", [string UTF8String]);
         fflush(logFile);
     }
-#endif
 }
+#endif
 
 - (void)dealloc {
     [_cachedShortcutItems release];
     [_safeModeNumber release];
+    [_currentBundleIdentifier release];
 
 #ifdef DEBUG
     if (logFile) {

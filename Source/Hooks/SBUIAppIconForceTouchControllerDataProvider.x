@@ -12,59 +12,60 @@
 #import "../Headers/SpringBoardServices/SBSApplicationShortcutItem.h"
 #import "../Headers/SpringBoardUI/SBUIAppIconForceTouchControllerDataProvider.h"
 
-static NSString *const kLaunchInSafeModeTweakShortcutItemIdentifier = @"com.inoahdev.launchinsafemode.safemode";
-
-%group iOS10
+%group iOS10Up
 %hook SBUIAppIconForceTouchControllerDataProvider
 - (NSArray *)applicationShortcutItems {
-    LaunchInSafeModeTweak *launchInSafeModeTweak = [LaunchInSafeModeTweak sharedInstance];
-    NSMutableArray *originalApplicationShortcutItems = (NSMutableArray *)%orig();
+    LaunchInSafeModeTweak *tweak = [LaunchInSafeModeTweak sharedInstance];
+    NSMutableArray *originalShortcutItems = (NSMutableArray *)%orig();
 
-    BOOL launchInSafeModeTweakIsEnabled = [launchInSafeModeTweak isEnabled];
-    if (!launchInSafeModeTweakIsEnabled) {
-        return originalApplicationShortcutItems;
+    BOOL isEnabled = [tweak isEnabled];
+    if (!isEnabled) {
+        return originalShortcutItems;
     }
 
-    NSMutableDictionary *launchInSafeModeTweakCachedShortcutItems = [launchInSafeModeTweak cachedShortcutItems];
+    NSMutableDictionary *cachedShortcutItems = [tweak cachedShortcutItems];
     NSString *bundleIdentifier = [self applicationBundleIdentifier];
 
     if (!bundleIdentifier || ![bundleIdentifier isKindOfClass:%c(NSString)]) {
-        return originalApplicationShortcutItems;
+        return originalShortcutItems;
     }
 
-    SBSApplicationShortcutItem *applicationShortcutItem = [launchInSafeModeTweakCachedShortcutItems objectForKey:bundleIdentifier];
-    if (!applicationShortcutItem) {
-        applicationShortcutItem = [[%c(SBSApplicationShortcutItem) alloc] init];
+    SBSApplicationShortcutItem *shortcutItem =
+        [cachedShortcutItems objectForKey:bundleIdentifier];
 
-        [applicationShortcutItem setLocalizedTitle:@"Safe Mode"];
-        [applicationShortcutItem setBundleIdentifierToLaunch:bundleIdentifier];
-        [applicationShortcutItem setType:kLaunchInSafeModeTweakShortcutItemIdentifier];
+    if (!shortcutItem) {
+        shortcutItem = [[%c(SBSApplicationShortcutItem) alloc] init];
 
-        [launchInSafeModeTweakCachedShortcutItems setObject:applicationShortcutItem forKey:bundleIdentifier];
-        [applicationShortcutItem release];
+        [shortcutItem setLocalizedTitle:@"Safe Mode"];
+        [shortcutItem setBundleIdentifierToLaunch:bundleIdentifier];
+        [shortcutItem setType:kLaunchInSafeModeShortcutItemIdentifier];
+
+        [cachedShortcutItems setObject:shortcutItem forKey:bundleIdentifier];
+        [shortcutItem release];
     }
 
-    if (![originalApplicationShortcutItems isKindOfClass:%c(NSMutableArray)]) {
-        NSMutableArray *newApplicationShortcutItems = [originalApplicationShortcutItems mutableCopy];
-        [newApplicationShortcutItems addObject:applicationShortcutItem];
+    if (![originalShortcutItems isKindOfClass:%c(NSMutableArray)]) {
+        NSMutableArray *newShortcutItems = [originalShortcutItems mutableCopy];
+        [newShortcutItems addObject:shortcutItem];
 
-        return [newApplicationShortcutItems autorelease];
+        return [newShortcutItems autorelease];
     }
 
-    [originalApplicationShortcutItems addObject:applicationShortcutItem];
-    return originalApplicationShortcutItems;
+    [originalShortcutItems addObject:shortcutItem];
+    return originalShortcutItems;
 }
 
-- (void)_installedAppsDidChange:(NSNotification *)installedAppsChangedNotification {
-    NSDictionary *installedAppsChangedNotificationUserInfo = [installedAppsChangedNotification userInfo];
-    NSSet *removedApplicationBundleIdentifiers = [installedAppsChangedNotificationUserInfo objectForKey:@"SBInstalledApplicationsRemovedBundleIDs"];
+- (void)_installedAppsDidChange:(NSNotification *)notification {
+    NSDictionary *userInfo = [notification userInfo];
+    NSSet *removedBundleIdentifiers =
+        [userInfo objectForKey:@"SBInstalledApplicationsRemovedBundleIDs"];
 
-    if (removedApplicationBundleIdentifiers) {
-        LaunchInSafeModeTweak *launchInSafeModeTweak = [LaunchInSafeModeTweak sharedInstance];
-        NSMutableDictionary *launchInSafeModeTweakCachedShortcutItems = [launchInSafeModeTweak cachedShortcutItems];
+    if (removedBundleIdentifiers) {
+        LaunchInSafeModeTweak *tweak = [LaunchInSafeModeTweak sharedInstance];
+        NSMutableDictionary *cachedShortcutItems = [tweak cachedShortcutItems];
 
-        for (NSString *removedApplicationBundleIdentifier in removedApplicationBundleIdentifiers) {
-            [launchInSafeModeTweakCachedShortcutItems removeObjectForKey:removedApplicationBundleIdentifier];
+        for (NSString *removedBundleIdentifier in removedBundleIdentifiers) {
+            [cachedShortcutItems removeObjectForKey:removedBundleIdentifier];
         }
     }
 
@@ -75,7 +76,7 @@ static NSString *const kLaunchInSafeModeTweakShortcutItemIdentifier = @"com.inoa
 %end
 
 %ctor {
-    if (IS_IOS_BETWEEN(iOS_10_0, iOS_10_2)) {
-        %init(iOS10);
+    if (IS_IOS_BETWEEN(iOS_10_0, iOS_11_2)) {
+        %init(iOS10Up);
     }
 }
