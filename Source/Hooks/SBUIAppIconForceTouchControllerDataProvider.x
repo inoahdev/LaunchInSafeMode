@@ -55,23 +55,6 @@
     return originalShortcutItems;
 }
 
-- (void)_installedAppsDidChange:(NSNotification *)notification {
-    NSDictionary *userInfo = [notification userInfo];
-    NSSet *removedBundleIdentifiers =
-        [userInfo objectForKey:@"SBInstalledApplicationsRemovedBundleIDs"];
-
-    if (removedBundleIdentifiers) {
-        LaunchInSafeModeTweak *tweak = [LaunchInSafeModeTweak sharedInstance];
-        NSMutableDictionary *cachedShortcutItems = [tweak cachedShortcutItems];
-
-        for (NSString *removedBundleIdentifier in removedBundleIdentifiers) {
-            [cachedShortcutItems removeObjectForKey:removedBundleIdentifier];
-        }
-    }
-
-    %orig();
-}
-
 %end
 %end
 

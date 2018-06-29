@@ -111,7 +111,6 @@ static CFStringRef preferencesChangedNotificationString =
 - (void)dealloc {
     [_cachedShortcutItems release];
     [_safeModeNumber release];
-    [_currentBundleIdentifier release];
 
 #ifdef DEBUG
     if (logFile) {
