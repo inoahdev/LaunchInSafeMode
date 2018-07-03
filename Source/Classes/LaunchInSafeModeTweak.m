@@ -53,6 +53,10 @@ static void LoadPreferences() {
     InitializePreferences(&preferences);
 
     LaunchInSafeModeTweak *tweak = [LaunchInSafeModeTweak sharedInstance];
+    LaunchInSafeModeLogFormat(@"Loaded preferences: %@, old: %@",
+                              preferences,
+                              [tweak preferences]);
+
     [tweak setPreferences:preferences];
 }
 

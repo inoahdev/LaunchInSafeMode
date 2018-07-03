@@ -17,6 +17,7 @@
 - (void)appIconForceTouchShortcutViewController:(SBUIAppIconForceTouchShortcutViewController *)shortcutViewController activateApplicationShortcutItem:(SBSApplicationShortcutItem *)shortcutItem {
     NSString *shortcutItemType = [shortcutItem type];
     if (![shortcutItemType isEqualToString:kLaunchInSafeModeShortcutItemIdentifier]) {
+        LaunchInSafeModeLogFormat(@"did not invoke LaunchInSafeMode shortcut, invoked shortcut with \"type\": %@", shortcutItemType);
         return %orig();
     }
 

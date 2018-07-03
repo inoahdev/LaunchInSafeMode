@@ -19,6 +19,7 @@
 
     BOOL isEnabled = [tweak isEnabled];
     if (!isEnabled) {
+        LaunchInSafeModeLog(@"Tweak is not enabled");
         return originalShortcutItems;
     }
 
@@ -44,10 +45,13 @@
         NSMutableArray *newShortcutItems = [originalShortcutItems mutableCopy];
         [newShortcutItems addObject:shortcutItem];
 
+        LaunchInSafeModeLogFormat(@"newShortcutItems: %@", newShortcutItems);
         return [newShortcutItems autorelease];
     }
 
     [originalShortcutItems addObject:shortcutItem];
+
+    LaunchInSafeModeLogFormat(@"originalShortcutItems: %@", originalShortcutItems);
     return originalShortcutItems;
 }
 

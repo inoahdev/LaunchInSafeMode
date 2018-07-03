@@ -18,6 +18,7 @@
 - (void)applicationShortcutMenu:(SBApplicationShortcutMenu *)applicationShortcutMenu activateShortcutItem:(SBSApplicationShortcutItem *)shortcutItem index:(NSUInteger)index {
     NSString *shortcutItemType = [shortcutItem type];
     if (![shortcutItemType isEqualToString:kLaunchInSafeModeShortcutItemIdentifier]) {
+        LaunchInSafeModeLogFormat(@"did not invoke LaunchInSafeMode shortcut, invoked shortcut with \"type\": %@", shortcutItemType);
         return %orig();
     }
 

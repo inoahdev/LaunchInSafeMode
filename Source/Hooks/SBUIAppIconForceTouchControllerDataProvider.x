@@ -20,6 +20,7 @@
 
     BOOL isEnabled = [tweak isEnabled];
     if (!isEnabled) {
+        LaunchInSafeModeLog(@"tweak is not enabled");
         return originalShortcutItems;
     }
 
@@ -27,6 +28,7 @@
     NSString *bundleIdentifier = [self applicationBundleIdentifier];
 
     if (!bundleIdentifier || ![bundleIdentifier isKindOfClass:%c(NSString)]) {
+        LaunchInSafeModeLogFormat(@"bundleIdentifier is invalid, %@", bundleIdentifier);
         return originalShortcutItems;
     }
 
@@ -48,10 +50,13 @@
         NSMutableArray *newShortcutItems = [originalShortcutItems mutableCopy];
         [newShortcutItems addObject:shortcutItem];
 
+        LaunchInSafeModeLogFormat(@"newShortcutItems: %@", newShortcutItems);
         return [newShortcutItems autorelease];
     }
 
     [originalShortcutItems addObject:shortcutItem];
+        
+    LaunchInSafeModeLogFormat(@"originalShortcutItems: %@", originalShortcutItems);
     return originalShortcutItems;
 }
 
