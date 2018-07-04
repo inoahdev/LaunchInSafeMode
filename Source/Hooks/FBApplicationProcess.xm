@@ -6,9 +6,7 @@
 //  Copyright © 2017 - 2018 inoahdev. All rights reserved.
 //
 
-#import <substrate.h>
 #import <version.h>
-
 #import "../Classes/LaunchInSafeModeTweak.h"
 
 #import "../Headers/FrontBoard/FBMutableProcessExecutionContext.h"

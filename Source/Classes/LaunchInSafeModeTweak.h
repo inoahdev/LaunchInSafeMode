@@ -10,10 +10,17 @@
 #import "../Headers/SpringBoardServices/SBSApplicationShortcutItem.h"
 
 #ifdef DEBUG
-#define LaunchInSafeModeLog(str) [[LaunchInSafeModeTweak sharedInstance] logString:str];
+#define LaunchInSafeModeLog(str) \
+do { \
+    NSString *formattedString = [[NSString alloc] initWithFormat:@"%s " str, __PRETTY_FUNCTION__]; \
+    [[LaunchInSafeModeTweak sharedInstance] logString:formattedString]; \
+    \
+    [formattedString release]; \
+} while (false);
+
 #define LaunchInSafeModeLogFormat(str, ...) \
 do { \
-    NSString *formattedString = [[NSString alloc] initWithFormat:@"%s " str, __func__, ##__VA_ARGS__]; \
+    NSString *formattedString = [[NSString alloc] initWithFormat:@"%s " str, __PRETTY_FUNCTION__, ##__VA_ARGS__]; \
     [[LaunchInSafeModeTweak sharedInstance] logString:formattedString]; \
     \
     [formattedString release]; \
