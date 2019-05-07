@@ -1,6 +1,8 @@
 include $(THEOS)/makefiles/common.mk
 
+ARCHS = armv7 armv7s arm64 arm64e
 BUNDLE_NAME = LaunchInSafeMode
+
 LaunchInSafeMode_FILES = LaunchInSafeModeRootListController.m
 LaunchInSafeMode_INSTALL_PATH = /Library/PreferenceBundles
 LaunchInSafeMode_FRAMEWORKS = UIKit
